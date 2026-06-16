@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>FlexiOS v1.0 | The Future of Expressive Computing</title>
+<!-- Load Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Load Three.js for 3D logo -->
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<!-- Google Fonts: Lexend & Be Vietnam Pro -->
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#dadada",
+                        "on-primary-container": "#cfc4ff",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed": "#f6e600",
+                        "primary-fixed-dim": "#cabeff",
+                        "inverse-primary": "#cabeff",
+                        "surface-container-highest": "#e2e2e2",
+                        "tertiary": "#004556",
+                        "secondary": "#676000",
+                        "on-tertiary-fixed-variant": "#004e60",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#d7ca00",
+                        "secondary-container": "#f3e300",
+                        "primary-container": "#5800ff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#4800d6",
+                        "tertiary-fixed-dim": "#4cd6ff",
+                        "surface-bright": "#f9f9f9",
+                        "outline": "#797489",
+                        "on-primary-fixed": "#1c0062",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "surface-container-low": "#f3f3f3",
+                        "on-tertiary-fixed": "#001f28",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#4000c1",
+                        "on-surface": "#1b1b1b",
+                        "tertiary-fixed": "#b7eaff",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-surface-variant": "#484457",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-container": "#66d9ff",
+                        "primary-fixed": "#e6deff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#1f1c00",
+                        "on-secondary-container": "#6b6400",
+                        "on-background": "#1b1b1b",
+                        "surface-tint": "#6128ff",
+                        "outline-variant": "#cac3da",
+                        "on-secondary-fixed-variant": "#4d4800",
+                        "inverse-surface": "#303030",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#005e74",
+                        flexiPurple: '#5800ff',
+                        flexiYellow: '#facc15',
+                        flexiBlue: '#38bdf8',
+                        flexiBlack: '#000000',
+                    },
+                    borderRadius: {
+                        "DEFAULT": "8px",
+                        "lg": "12px",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit": "8px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "stroke-weight": "3px",
+                        "gutter": "24px",
+                        "shadow-offset": "6px"
+                    },
+                    fontFamily: {
+                        lexend: ['Lexend', 'sans-serif'],
+                        'body-md': ['Be Vietnam Pro', 'sans-serif'],
+                        'display-lg': ['Lexend', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neubrutal-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+                        'neubrutal': '4px 4px 0px 0px rgba(0,0,0,1)',
+                        'neubrutal-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+                        'chunky': '6px 6px 0px 0px rgba(0,0,0,1)',
+                    },
+                }
+            }
+        }
+    </script>
+<style>
+        .view { transition: opacity 0.5s ease-in-out; }
+        .hidden { display: none !important; }
+        .neubrutal-border { border: 3px solid black; }
+        .neubrutal-btn { 
+            border: 3px solid black;
+            transition: all 0.1s;
+        }
+        .neubrutal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: none !important;
+        }
+        
+        .app-window {
+            position: absolute;
+            display: none; 
+            flex-direction: column;
+            transform-origin: bottom center;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, top 0.3s ease, left 0.3s ease, width 0.3s ease, height 0.3s ease;
+            user-select: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .app-window.active {
+            display: flex !important;
+            opacity: 1;
+            pointer-events: auto;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .app-window.minimized {
+            transform: scale(0) translateY(400px);
+            opacity: 0 !important;
+            pointer-events: none;
+            display: flex !important;
+        }
+        .app-window.maximized {
+            top: 4rem !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100% - 4rem - 6.5rem) !important;
+            border-radius: 0;
+            box-shadow: none !important;
+        }
+        
+        .flexbar-icon {
+            transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            position: relative;
+        }
+        .flexbar-icon:hover {
+            transform: translateY(-8px) scale(1.1);
+        }
+        /* Indicators */
+        .flexbar-icon.active-indicator::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: black;
+            border-radius: 50%;
+        }
+        .flexbar-icon.minimized-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background: #facc15; 
+            border: 2px solid black;
+            border-radius: 50%;
+            z-index: 20;
+        }
+        
+        .desktop-icon:hover .icon-box {
+            transform: translateY(-4px);
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .bg-mountain {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJZCoLfcJzOkwHR48FgLVtghtpQFxlafRL-9yKmxVEFMPXjcGcqdCi11eO1r87bFjLjagauM4wNpOdujhiAqqrukklKZBLR1fEgq-t_C2gEjOtSJu1ItIM9Wyx1qktB87AeWjf-tVcBEyt-HNBzzfK2eTxt4tJ0mum7vdiDS_hAVpDslXMbm7nm7spjWT9rsxiVCpw1_EozI5-KExhNmw6afD3CJAS9iJ9bZEaOTiDvhbQWXDsbKvembirSci9-I2LcTZ-K8_vO2c');
+            background-size: cover;
+            background-position: center;
+        }
+        .bg-mesh {
+            background-color: #f6e600;
+            background-image:  linear-gradient(black 2px, transparent 2px), linear-gradient(90deg, black 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+        .bg-pastel {
+            background: repeating-linear-gradient(45deg, #ffdad6, #ffdad6 20px, #e6deff 20px, #e6deff 40px);
+        }
+        .bg-none {
+            background: #f9f9f9;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .terminal-glow {
+            text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1b1b1b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #484457;
+            border: 2px solid #1b1b1b;
+        }
+        
+        .window-header {
+            cursor: grab;
+        }
+        .window-header:active {
+            cursor: grabbing;
+        }
+        .maximized .window-header {
+            cursor: default;
+        }
+        
+        .window-content {
+            user-select: text;
+        }
+    </style>
+</head>
+<body class="h-full overflow-hidden bg-background font-lexend">
+<!-- 1. Landing Page View -->
+<main class="view min-h-screen flex flex-col" id="view-landing">
+<header class="bg-flexiBlack text-white p-4 border-b-4 border-flexiBlack flex justify-between items-center z-50">
+<div class="text-2xl font-extrabold text-flexiYellow">FlexiOS v1.0</div>
+<nav class="flex gap-8 font-bold items-center">
+<a class="border-b-2 border-flexiYellow text-flexiYellow" href="#">Home</a>
+<a class="hover:text-flexiYellow" href="#">Docs</a>
+<a class="hover:text-flexiYellow" href="#">Github</a>
+<div class="flex gap-4 ml-4">
+<button class="p-1"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-1"><span class="material-symbols-outlined">person</span></button>
+</div>
+</nav>
+</header>
+<div class="flex-grow max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-12 items-center">
+<div>
+<div class="inline-block bg-flexiYellow neubrutal-border px-3 py-1 font-black transform -rotate-2 mb-6 shadow-neubrutal">VERSION 1.0 IS HERE</div>
+<h1 class="text-7xl font-black mb-6 leading-tight">FlexiOS v1.0</h1>
+<p class="text-xl text-zinc-600 mb-8 max-w-md font-body-md">The most customizable OS ever built. Modular, beautiful, and unapologetically bold.</p>
+<div class="flex gap-4">
+<button class="neubrutal-btn bg-flexiPurple text-white text-xl font-bold px-8 py-4 shadow-neubrutal hover:shadow-neubrutal-lg" onclick="transitionToBoot()">Launch System</button>
+<button class="neubrutal-btn bg-flexiBlue text-black text-xl font-bold px-8 py-4 shadow-neubrutal hover:shadow-neubrutal-lg">View Demo</button>
+</div>
+</div>
+<div class="relative">
+<div class="neubrutal-border bg-black p-2 rounded-t-lg shadow-neubrutal-lg overflow-hidden">
+<div class="flex gap-2 p-2 border-b-2 border-zinc-800">
+<div class="w-3 h-3 rounded-full bg-red-500"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+<div class="text-[10px] text-zinc-500 flex-grow text-center uppercase tracking-tighter font-bold">SYSTEM_PREVIEW.EXE</div>
+</div>
+<img alt="FlexiOS Desktop Preview" class="w-full opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7dtb0CUUVF_-zBMKiXVoIcEKxc-mV9DntvI4ex4UoTeKlG_39cxtx2qVpmyB7KEyyEkk77bAHUOo5NutDzXzBuYgSB2Eqqz5WtmYC8OZ67cz7HyqdDk1lCzY55PiDcwhsG0IS2MlHRydFuVcZYav4HNwnIWIoFVYpKreMjp65Di5sfcNpnEHpt9jCiDN83Ov7JCfxeQuzsmRuAFR4a9dXJfZhKub7LOFyF88guJcNJlAIkvWtpgN2aC0wcFMTDh5DGxNjkColGx0"/>
+</div>
+<div class="absolute -bottom-8 -left-8 w-24 h-24 bg-flexiBlue neubrutal-border shadow-neubrutal"></div>
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-flexiYellow rounded-full neubrutal-border shadow-neubrutal"></div>
+</div>
+</div>
+<section class="bg-flexiYellow py-20 border-y-4 border-flexiBlack mt-12">
+<div class="max-w-4xl mx-auto px-6 text-center">
+<h2 class="text-6xl font-black mb-6">Ready to Flex?</h2>
+<p class="text-xl font-bold mb-12">Join 50,000+ testers building the future of expressive computing.</p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<button class="neubrutal-btn bg-flexiPurple text-white px-10 py-5 text-2xl font-black shadow-neubrutal">Download FlexiOS</button>
+<button class="neubrutal-btn bg-white text-black px-10 py-5 text-2xl font-black shadow-neubrutal">Changelog</button>
+</div>
+</div>
+</section>
+<footer class="bg-zinc-200 py-16 px-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div><h4 class="text-flexiPurple text-3xl font-black mb-6">FlexiOS</h4><p class="text-zinc-600 font-body-md">Built for the digital rebels.</p></div>
+<div><h5 class="font-black mb-6 uppercase tracking-wider text-sm">System</h5><ul class="space-y-4 text-zinc-600 font-body-md"><li>Downloads</li><li>Documentation</li></ul></div>
+<div><h5 class="font-black mb-6 uppercase tracking-wider text-sm">Community</h5><ul class="space-y-4 text-zinc-600 font-body-md"><li>Forum</li><li>Discord</li></ul></div>
+<div><h5 class="font-black mb-6 uppercase tracking-wider text-sm">Connect</h5><div class="flex gap-4"><div class="w-10 h-10 bg-flexiPurple neubrutal-border shadow-neubrutal flex items-center justify-center text-white font-bold">f</div><div class="w-10 h-10 bg-flexiYellow neubrutal-border shadow-neubrutal flex items-center justify-center text-black font-bold">@</div></div></div>
+</div>
+</footer>
+</main>
+<!-- 2. Boot Sequence View -->
+<div class="view hidden fixed inset-0 bg-black z-[100] flex items-center justify-center overflow-hidden" id="view-boot">
+<canvas class="absolute inset-0 w-full h-full opacity-60" id="boot-shader"></canvas>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-64 h-64 mb-8" id="boot-logo-3d"></div>
+<div class="bg-white neubrutal-border px-8 py-4 shadow-neubrutal-lg transform -rotate-1 mb-12">
+<h2 class="text-4xl font-black text-flexiPurple">FlexiOS v1.0</h2>
+</div>
+<div class="w-96">
+<div class="flex justify-between items-end mb-2">
+<span class="text-flexiPurple font-bold uppercase text-xs tracking-widest">Initialising Expressive Environment...</span>
+<span class="bg-black text-white px-2 py-0.5 text-xs font-bold" id="boot-progress-text">0%</span>
+</div>
+<div class="w-full h-6 bg-zinc-800 border-2 border-zinc-700 p-1">
+<div class="h-full bg-flexiYellow w-0 transition-all duration-300" id="boot-progress-bar"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Desktop View -->
+<div class="view hidden fixed inset-0 z-30 overflow-hidden" id="view-desktop">
+<div class="absolute inset-0 z-[-1] bg-mountain transition-all duration-500" id="desktop-bg"></div>
+<!-- Top Bar -->
+<header class="bg-tertiary text-on-tertiary flex justify-between items-center w-full px-10 py-2 h-16 z-[500] fixed top-0 border-b-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<div class="flex items-center gap-6">
+<span class="font-lexend text-2xl text-secondary-fixed drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] font-extrabold">FlexiOS v1.0</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-secondary-fixed font-bold underline decoration-4 text-sm" href="#">Desktop</a>
+<button class="text-on-tertiary opacity-80 hover:opacity-100 transition-all text-sm font-bold" onclick="toggleApp('files-window')">Files</button>
+<button class="text-on-tertiary opacity-80 hover:opacity-100 transition-all text-sm font-bold" onclick="toggleApp('hub-window')">Hub</button>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-white px-4 py-1.5 rounded-full border-[3px] border-black flex items-center gap-2 text-on-surface shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<input class="bg-transparent border-none outline-none focus:ring-0 text-sm p-0 w-32 placeholder:text-zinc-400" placeholder="Search..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center bg-secondary-fixed text-black border-[3px] border-black rounded-full shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:scale-110 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center bg-tertiary-fixed text-black border-[3px] border-black rounded-full px-3 py-1 gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-[10px] uppercase font-bold">Standard User</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Desktop Workspace -->
+<main class="relative z-10 w-full h-full pt-24 px-10 pb-32">
+<div class="flex flex-col gap-8 w-fit">
+<button class="desktop-icon group flex flex-col items-center gap-2 w-24" onclick="toggleApp('files-window')">
+<div class="icon-box w-20 h-20 bg-primary-fixed border-[3px] border-black rounded-2xl shadow-neubrutal group-active:scale-95 group-active:shadow-none transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-[40px]">folder</span>
+</div>
+<span class="text-xs bg-black text-white px-2 py-0.5 rounded border-2 border-black font-bold">Files</span>
+</button>
+<button class="desktop-icon group flex flex-col items-center gap-2 w-24" onclick="toggleApp('store-window')">
+<div class="icon-box w-20 h-20 bg-secondary-fixed border-[3px] border-black rounded-2xl shadow-neubrutal group-active:scale-95 group-active:shadow-none transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-[40px]">shopping_bag</span>
+</div>
+<span class="text-xs bg-black text-white px-2 py-0.5 rounded border-2 border-black font-bold">Store</span>
+</button>
+<button class="desktop-icon group flex flex-col items-center gap-2 w-24" onclick="toggleApp('terminal-window')">
+<div class="icon-box w-20 h-20 bg-surface-container-highest border-[3px] border-black rounded-2xl shadow-neubrutal group-active:scale-95 group-active:shadow-none transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-[40px]">terminal</span>
+</div>
+<span class="text-xs bg-black text-white px-2 py-0.5 rounded border-2 border-black font-bold">Terminal</span>
+</button>
+<button class="desktop-icon group flex flex-col items-center gap-2 w-24" onclick="toggleApp('hub-window')">
+<div class="icon-box w-20 h-20 bg-tertiary-fixed border-[3px] border-black rounded-2xl shadow-neubrutal group-active:scale-95 group-active:shadow-none transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-[40px]">palette</span>
+</div>
+<span class="text-xs bg-black text-white px-2 py-0.5 rounded border-2 border-black font-bold">Hub</span>
+</button>
+</div>
+<!-- App Windows -->
+<!-- Files -->
+<div class="app-window absolute top-32 left-40 w-[600px] h-[400px] bg-white border-[3px] border-black rounded-xl shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden z-[100] flex flex-col" id="files-window">
+<div class="window-header bg-surface-container-high border-b-[3px] border-black px-4 py-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-[#FF5F56] border border-black/20 cursor-pointer" onclick="closeApp('files-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black/20 cursor-pointer" onclick="minimizeApp('files-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#27C93F] border border-black/20 cursor-pointer" onclick="maximizeApp('files-window', event)"></div>
+</div>
+<span class="text-sm font-bold ml-2">FlexiExplorer</span>
+</div>
+</div>
+<div class="flex-1 p-6 bg-white overflow-y-auto window-content">
+<div class="grid grid-cols-4 gap-6">
+<div class="flex flex-col items-center gap-2 group cursor-pointer active:scale-95 transition-transform">
+<div class="p-4 bg-primary-fixed rounded-lg border-2 border-black shadow-neubrutal-sm">
+<span class="material-symbols-outlined text-[32px]">folder</span>
+</div>
+<span class="text-xs font-bold">Documents</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Terminal -->
+<div class="app-window absolute top-[150px] right-20 w-[600px] h-[450px] bg-[#1b1b1b] border-[4px] border-black rounded-xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden z-[110] flex flex-col" id="terminal-window">
+<input autocomplete="off" class="absolute opacity-0 pointer-events-none" id="real-terminal-input" type="text"/>
+<div class="window-header bg-primary flex items-center justify-between px-4 py-2 border-b-[3px] border-black">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-[18px]">terminal</span>
+<span class="font-mono text-white text-xs font-bold" id="terminal-title">root@flexios:~</span>
+</div>
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full border border-black/20 bg-[#FF5F56] cursor-pointer" onclick="closeApp('terminal-window', event)"></div>
+<div class="w-3 h-3 rounded-full border border-black/20 bg-[#FFBD2E] cursor-pointer" onclick="minimizeApp('terminal-window', event)"></div>
+<div class="w-3 h-3 rounded-full border border-black/20 bg-[#27C93F] cursor-pointer" onclick="maximizeApp('terminal-window', event)"></div>
+</div>
+</div>
+<div class="flex-1 p-4 font-mono text-[#00ff41] overflow-y-auto custom-scrollbar terminal-glow text-base space-y-2 cursor-text window-content" id="terminal-body">
+<p class="text-secondary-fixed">FlexiOS Terminal v1.0.0 - Initializing Subsystems...</p>
+<p>[ OK ] Loading Kernels: flex-kernel-v5.0.1</p>
+<p>[ OK ] Mounting FileSystems: /home/flexiuser/workspace</p>
+<p class="text-[#00ff41]">Update Complete! Welcome to the Grid.</p>
+<br/>
+<div id="terminal-history"></div>
+<div class="flex flex-wrap gap-x-2 items-center" id="prompt-line">
+<span class="text-[#00ff41] font-bold">root@flexios:</span>
+<span class="text-tertiary-fixed-dim" id="current-dir">~</span>
+<span class="">$</span>
+<span class="inline-block break-all" id="visible-input"></span>
+<span class="w-2.5 h-5 bg-[#00ff41] cursor-blink inline-block" id="terminal-cursor"></span>
+</div>
+</div>
+</div>
+<!-- Store -->
+<div class="app-window absolute top-[100px] left-1/4 w-[700px] h-[500px] bg-white border-[3px] border-black rounded-xl shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden z-[105] flex flex-col" id="store-window">
+<div class="window-header bg-secondary-fixed border-b-[3px] border-black px-4 py-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-[#FF5F56] border border-black/20 cursor-pointer" onclick="closeApp('store-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black/20 cursor-pointer" onclick="minimizeApp('store-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#27C93F] border border-black/20 cursor-pointer" onclick="maximizeApp('store-window', event)"></div>
+</div>
+<span class="text-sm font-bold ml-2">FlexiStore</span>
+</div>
+</div>
+<div class="flex-1 p-6 bg-surface-container-low overflow-y-auto window-content">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- App Card 1 -->
+<div class="bg-white border-[3px] border-black p-4 rounded-lg shadow-neubrutal hover:scale-[1.02] transition-transform">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-12 h-12 bg-primary-container border-2 border-black rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white">code</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">FlexiCode</h4>
+<span class="text-[10px] bg-black text-white px-2 py-0.5 rounded font-black">DEVELOPER</span>
+</div>
+</div>
+<p class="text-xs font-body-md text-zinc-600 mb-4">A high-expression code editor with built-in neubrutalist themes.</p>
+<button class="w-full neubrutal-btn bg-flexiPurple text-white py-2 font-bold shadow-neubrutal-sm text-sm">Install</button>
+</div>
+<!-- App Card 2 -->
+<div class="bg-white border-[3px] border-black p-4 rounded-lg shadow-neubrutal hover:scale-[1.02] transition-transform">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-12 h-12 bg-secondary-fixed border-2 border-black rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-black">brush</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">PixelDraw</h4>
+<span class="text-[10px] bg-black text-white px-2 py-0.5 rounded font-black">CREATIVE</span>
+</div>
+</div>
+<p class="text-xs font-body-md text-zinc-600 mb-4">Unleash your creativity with vector and raster tools designed for rebels.</p>
+<button class="w-full neubrutal-btn bg-secondary-fixed text-black py-2 font-bold shadow-neubrutal-sm text-sm">Open</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Hub -->
+<div class="app-window absolute bottom-40 right-40 w-[400px] h-[400px] bg-white border-[3px] border-black rounded-xl shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden z-[102] flex flex-col" id="hub-window">
+<div class="window-header bg-tertiary-fixed border-b-[3px] border-black px-4 py-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-[#FF5F56] border border-black/20 cursor-pointer" onclick="closeApp('hub-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black/20 cursor-pointer" onclick="minimizeApp('hub-window', event)"></div>
+<div class="w-3 h-3 rounded-full bg-[#27C93F] border border-black/20 cursor-pointer" onclick="maximizeApp('hub-window', event)"></div>
+</div>
+<span class="text-sm font-bold ml-2">Customization Hub</span>
+</div>
+</div>
+<div class="p-6 space-y-4 window-content">
+<h3 class="font-bold mb-2">Desktop Wallpaper</h3>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<button class="p-3 border-[3px] border-black bg-white rounded-lg shadow-neubrutal-sm hover:scale-105 transition-transform font-bold text-xs" onclick="selectWallpaper('mountain')">Mountain</button>
+<button class="p-3 border-[3px] border-black bg-white rounded-lg shadow-neubrutal-sm hover:scale-105 transition-transform font-bold text-xs" onclick="selectWallpaper('mesh')">Mesh</button>
+<button class="p-3 border-[3px] border-black bg-white rounded-lg shadow-neubrutal-sm hover:scale-105 transition-transform font-bold text-xs" onclick="selectWallpaper('pastel')">Pastel</button>
+</div>
+<button class="w-full neubrutal-btn bg-flexiPurple text-white py-2 font-bold shadow-neubrutal mb-6" onclick="applyWallpaper()">Apply to System</button>
+<div class="pt-4 border-t-2 border-black/10">
+<label class="block text-xs font-bold mb-2">Interface Roundness</label>
+<input class="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary" max="24" min="0" oninput="document.querySelectorAll('.app-window').forEach(w =&gt; w.style.borderRadius = this.value + 'px')" type="range" value="12"/>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom FlexBar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 items-center z-[1000] bg-surface-container-high rounded-full px-6 py-3 border-[3px] border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+<button class="flexbar-icon bg-primary text-on-primary rounded-full p-4 border-[2px] border-black scale-110 -translate-y-2 hover:scale-125 transition-transform duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" onclick="closeAllApps()">
+<span class="material-symbols-outlined text-[28px]">apps</span>
+</button>
+<div class="w-[2px] h-8 bg-black/20 mx-2"></div>
+<button class="flexbar-icon text-on-surface p-3 group" id="nav-files" onclick="toggleApp('files-window')">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Files</div>
+<span class="material-symbols-outlined text-[28px]">folder</span>
+</button>
+<button class="flexbar-icon text-on-surface p-3 group" id="nav-store" onclick="toggleApp('store-window')">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Store</div>
+<span class="material-symbols-outlined text-[28px]">shopping_bag</span>
+</button>
+<button class="flexbar-icon text-on-surface p-3 group" id="nav-terminal" onclick="toggleApp('terminal-window')">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Terminal</div>
+<span class="material-symbols-outlined text-[28px]">code</span>
+</button>
+<button class="flexbar-icon text-on-surface p-3 group" id="nav-hub" onclick="toggleApp('hub-window')">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Hub</div>
+<span class="material-symbols-outlined text-[28px]">palette</span>
+</button>
+</nav>
+</div>
+<script>
+        let currentView = 'landing';
+        let pendingWallpaper = 'mountain';
+
+        function selectWallpaper(wp) {
+            pendingWallpaper = wp;
+        }
+
+        function applyWallpaper() {
+            const bg = document.getElementById('desktop-bg');
+            if(bg) {
+                bg.className = `absolute inset-0 z-[-1] transition-all duration-500 bg-${pendingWallpaper}`;
+            }
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            const nextView = document.getElementById(`view-${viewId}`);
+            if (nextView) {
+                nextView.classList.remove('hidden');
+                nextView.style.opacity = 0;
+                setTimeout(() => nextView.style.opacity = 1, 10);
+                currentView = viewId;
+                if(viewId === 'desktop') {
+                    // Desktop starts clean.
+                }
+            }
+        }
+
+        function transitionToBoot() {
+            showView('boot');
+            startBootSequence();
+        }
+
+        function startBootSequence() {
+            let progress = 0;
+            const bar = document.getElementById('boot-progress-bar');
+            const text = document.getElementById('boot-progress-text');
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => showView('desktop'), 1000);
+                }
+                bar.style.width = `${progress}%`;
+                text.innerText = `${Math.floor(progress)}%`;
+            }, 200);
+        }
+
+        // Window Management Logic Overhaul
+        const WindowManager = {
+            windowStates: {
+                'files-window': { isOpen: false, isMinimized: false, zIndex: 100 },
+                'terminal-window': { isOpen: false, isMinimized: false, zIndex: 100 },
+                'store-window': { isOpen: false, isMinimized: false, zIndex: 100 },
+                'hub-window': { isOpen: false, isMinimized: false, zIndex: 100 }
+            },
+            highestZ: 100,
+            activeDragWindow: null,
+            offsetX: 0,
+            offsetY: 0,
+            
+            init() {
+                // Ensure completely clean startup
+                document.querySelectorAll('.app-window').forEach(win => {
+                    win.classList.remove('active', 'minimized', 'maximized');
+                    win.style.display = 'none';
+                    win.style.opacity = '0';
+                    win.style.pointerEvents = 'none';
+                    
+                    const header = win.querySelector('.window-header');
+                    if (header) {
+                        header.addEventListener('mousedown', (e) => this.onMouseDown(e, win));
+                    }
+                    win.addEventListener('mousedown', () => {
+                        if (this.windowStates[win.id]?.isOpen) this.focusWindow(win.id);
+                    });
+                });
+
+                window.addEventListener('mousemove', (e) => this.onMouseMove(e));
+                window.addEventListener('mouseup', () => this.onMouseUp());
+            },
+
+            toggleApp(id) {
+                const state = this.windowStates[id];
+                if (!state) return;
+
+                if (!state.isOpen) {
+                    this.openApp(id);
+                } else if (state.isMinimized) {
+                    this.restoreApp(id);
+                } else {
+                    if (state.zIndex === this.highestZ) {
+                        this.minimizeApp(id);
+                    } else {
+                        this.focusWindow(id);
+                    }
+                }
+            },
+
+            openApp(id) {
+                const state = this.windowStates[id];
+                if (!state) return;
+                
+                state.isOpen = true;
+                state.isMinimized = false;
+                
+                const app = document.getElementById(id);
+                app.style.display = 'flex';
+                app.style.opacity = '1';
+                app.style.pointerEvents = 'auto';
+                app.classList.add('active');
+                app.classList.remove('minimized');
+                
+                this.updateNav(id);
+                this.focusWindow(id);
+                
+                if(id === 'terminal-window') focusTerminal();
+            },
+
+            closeApp(id, e) {
+                if (e) e.stopPropagation();
+                const state = this.windowStates[id];
+                if (!state) return;
+                
+                state.isOpen = false;
+                state.isMinimized = false;
+                
+                const app = document.getElementById(id);
+                app.style.display = 'none';
+                app.style.opacity = '0';
+                app.style.pointerEvents = 'none';
+                app.classList.remove('active', 'minimized', 'maximized');
+                
+                this.updateNav(id);
+            },
+
+            minimizeApp(id, e) {
+                if (e) e.stopPropagation();
+                const state = this.windowStates[id];
+                if (!state || !state.isOpen) return;
+                
+                state.isMinimized = true;
+                
+                const app = document.getElementById(id);
+                app.classList.add('minimized');
+                
+                this.updateNav(id);
+            },
+
+            restoreApp(id) {
+                const state = this.windowStates[id];
+                if (!state || !state.isOpen) return;
+                
+                state.isMinimized = false;
+                
+                const app = document.getElementById(id);
+                app.classList.remove('minimized');
+                
+                this.updateNav(id);
+                this.focusWindow(id);
+            },
+
+            maximizeApp(id, e) {
+                if (e) e.stopPropagation();
+                const app = document.getElementById(id);
+                if (app) {
+                    app.classList.toggle('maximized');
+                    this.focusWindow(id);
+                }
+            },
+
+            focusWindow(id) {
+                const state = this.windowStates[id];
+                if (!state || !state.isOpen) return;
+                
+                this.highestZ++;
+                state.zIndex = this.highestZ;
+                
+                const app = document.getElementById(id);
+                if(app) app.style.zIndex = state.zIndex;
+            },
+
+            updateNav(id) {
+                const navId = 'nav-' + id.split('-')[0];
+                const navBtn = document.getElementById(navId);
+                const state = this.windowStates[id];
+                
+                if (!navBtn) return;
+                
+                if (!state.isOpen) {
+                    navBtn.classList.remove('active-indicator', 'minimized-indicator');
+                } else if (state.isMinimized) {
+                    navBtn.classList.remove('active-indicator');
+                    navBtn.classList.add('minimized-indicator');
+                } else {
+                    navBtn.classList.add('active-indicator');
+                    navBtn.classList.remove('minimized-indicator');
+                }
+            },
+
+            closeAll() {
+                Object.keys(this.windowStates).forEach(id => this.closeApp(id));
+            },
+
+            onMouseDown(e, win) {
+                if (e.button !== 0) return;
+                if (win.classList.contains('maximized')) return;
+                
+                this.activeDragWindow = win;
+                this.focusWindow(win.id);
+                
+                const rect = win.getBoundingClientRect();
+                this.offsetX = e.clientX - rect.left;
+                this.offsetY = e.clientY - rect.top;
+                
+                document.body.style.userSelect = 'none';
+            },
+
+            onMouseMove(e) {
+                if (!this.activeDragWindow) return;
+                
+                const x = e.clientX - this.offsetX;
+                const y = e.clientY - this.offsetY;
+                
+                this.activeDragWindow.style.left = `${x}px`;
+                this.activeDragWindow.style.top = `${y}px`;
+            },
+
+            onMouseUp() {
+                if (this.activeDragWindow) {
+                    this.activeDragWindow = null;
+                    document.body.style.userSelect = '';
+                }
+            }
+        };
+
+        // Global functions for HTML element onClick attributes
+        function toggleApp(id) { WindowManager.toggleApp(id); }
+        function openApp(id) { WindowManager.openApp(id); }
+        function closeApp(id, e) { WindowManager.closeApp(id, e); }
+        function minimizeApp(id, e) { WindowManager.minimizeApp(id, e); }
+        function maximizeApp(id, e) { WindowManager.maximizeApp(id, e); }
+        function closeAllApps() { WindowManager.closeAll(); }
+
+        WindowManager.init();
+
+        // Terminal Logic
+        const realInput = document.getElementById('real-terminal-input');
+        const visibleInput = document.getElementById('visible-input');
+        const terminalBody = document.getElementById('terminal-body');
+        const terminalHistory = document.getElementById('terminal-history');
+
+        function focusTerminal() {
+            if (currentView === 'desktop' && WindowManager.windowStates['terminal-window'].isOpen) {
+                realInput.focus();
+            }
+        }
+        terminalBody.addEventListener('click', focusTerminal);
+
+        realInput.addEventListener('input', (e) => {
+            visibleInput.innerText = e.target.value;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        });
+
+        realInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const rawCmd = realInput.value.trim();
+                const cmd = rawCmd.toLowerCase().split(' ')[0];
+                
+                const entry = document.createElement('div');
+                entry.className = "flex gap-x-2 mb-1";
+                entry.innerHTML = `<span class="text-[#00ff41] font-bold">root@flexios:</span><span class="text-tertiary-fixed-dim">~</span><span>$</span><span class="text-white">${realInput.value}</span>`;
+                terminalHistory.appendChild(entry);
+
+                const response = document.createElement('div');
+                response.className = "mb-3 ml-4 opacity-80 text-sm";
+                
+                switch(cmd) {
+                    case 'help': response.innerHTML = "Available: help, ls, clear, status, date, neofetch, exit"; break;
+                    case 'ls': response.innerHTML = "apps/ documents/ config.sys boot.log"; break;
+                    case 'clear': terminalHistory.innerHTML = ''; response.innerHTML = ''; break;
+                    case 'status': response.innerHTML = "Kernel: 5.0.1 | CPU: 12% | RAM: 2.4GB/8GB | Status: OPTIMAL"; break;
+                    case 'date': response.innerHTML = new Date().toLocaleString(); break;
+                    case 'neofetch': response.innerHTML = `<div class="text-secondary-fixed font-bold">FlexiOS v1.0.0</div><div>Kernel: flex-v5.0.1-neubrutalist</div><div>Shell: flex-sh 1.2</div><div>Uptime: 0.1s</div>`; break;
+                    case 'exit': closeApp('terminal-window'); break;
+                    case '': break;
+                    default: response.innerHTML = `flexios: command not found: ${cmd}`; response.classList.add('text-error');
+                }
+
+                if (cmd !== 'clear' && cmd !== '') terminalHistory.appendChild(response);
+                realInput.value = '';
+                visibleInput.innerText = '';
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        });
+
+        // Boot Shader
+        (function() {
+            const canvas = document.getElementById('boot-shader');
+            const gl = canvas.getContext('webgl');
+            if (!gl) return;
+            const vs = `attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
+            const fs = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_res;
+                float grid(vec2 uv, float res) {
+                    vec2 g = fract(uv * res);
+                    return 1.0 - smoothstep(0.0, 0.03, min(g.x, g.y));
+                }
+                void main() {
+                    vec2 uv = gl_FragCoord.xy / u_res;
+                    vec2 centered = (uv - 0.5) * (u_res.x/u_res.y);
+                    vec3 color = vec3(0.01, 0.0, 0.03);
+                    float g1 = grid(centered + u_time * 0.03, 10.0);
+                    color += vec3(0.34, 0.23, 0.96) * g1 * 0.3;
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+            const prog = gl.createProgram();
+            const createShader = (gl, type, source) => {
+                const s = gl.createShader(type); gl.shaderSource(s, source); gl.compileShader(s); return s;
+            };
+            gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, vs));
+            gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, fs));
+            gl.linkProgram(prog); gl.useProgram(prog);
+            const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+            const pos = gl.getAttribLocation(prog, 'a_position');
+            gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+            const uTime = gl.getUniformLocation(prog, 'u_time');
+            const uRes = gl.getUniformLocation(prog, 'u_res');
+            function render(t) {
+                if (currentView === 'boot') {
+                    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                    gl.uniform1f(uTime, t * 0.001);
+                    gl.uniform2f(uRes, canvas.width, canvas.height);
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                }
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        })();
+</script>
+</body></html>
