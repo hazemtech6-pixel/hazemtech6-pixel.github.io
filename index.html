@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Hazem Talaat | Portfolio</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Lexend -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            lexend: ['Lexend', 'sans-serif'],
+          },
+          colors: {
+            brand: '#5800ff', // FlexiOS Purple
+            accent: '#facc15', // Yellow
+          },
+          boxShadow: {
+            'brutal': '8px 8px 0px 0px rgba(0, 0, 0, 1)',
+            'brutal-sm': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="global-styles">
+    body {
+      font-family: 'Lexend', sans-serif;
+      background-color: #f9f9f9;
+      color: #1a1a1a;
+    }
+    /* Smooth scrolling for anchor links */
+    html {
+      scroll-behavior: smooth;
+    }
+    .neubrutalism-card {
+      border: 4px solid black;
+      transition: all 0.2s ease;
+    }
+    .neubrutalism-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+    }
+    .neubrutalism-button {
+      border: 4px solid black;
+      box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+      transition: all 0.1s ease;
+    }
+    .neubrutalism-button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+<!-- BEGIN: MainHeader -->
+<header class="w-full sticky top-0 z-50 bg-white border-b-4 border-black px-6 py-4" data-purpose="sticky-navigation">
+<div class="max-w-4xl mx-auto flex justify-between items-center">
+<h1 class="text-2xl font-extrabold tracking-tight">Hazem Talaat</h1>
+<nav class="flex gap-4">
+<a class="neubrutalism-button bg-accent px-4 py-2 font-bold uppercase text-sm" href="#projects">Projects</a>
+<a class="neubrutalism-button bg-brand text-white px-4 py-2 font-bold uppercase text-sm" href="https://github.com/hazemtech6-pixel" target="_blank">Github</a>
+</nav>
+</div>
+</header>
+<!-- END: MainHeader -->
+<main class="w-full max-w-4xl px-6 py-12 space-y-16">
+<!-- BEGIN: ProfileHero -->
+<section class="flex flex-col md:flex-row items-center gap-10 md:gap-16 pt-8" data-purpose="hero-section">
+<!-- Profile Image Container -->
+<div class="w-64 h-64 md:w-80 md:h-80 flex-shrink-0 neubrutalism-card bg-brand overflow-hidden rounded-lg shadow-brutal">
+<img alt="Hazem Talaat Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAVsh_dtUsg7LKoNgUX8ndHno4k2ULFjC1Ah27UOft8qNZG8iioRKsjTdGUX1ZkaME_d3O-QnQPkJ8Z4I009lsI7EkDJTAOMZOhFhL-RA7qwKWzXb1hn16igigztcvziWctWZJN4933WnuCFbDk3PsHfCUfN_-gbncRBtZF9AL8piuJuYNbsSzPKVaQ4PBk1nRdB3EMkSmxc_68zOWGoJOA5fdecSn_2A8VSijWvyQYOnDwL0dh2UC3M1eKUqPf0cF-NoettxGY90">
+</div>
+<!-- Bio Content -->
+<div class="flex flex-col space-y-6 text-center md:text-left">
+<div class="space-y-2">
+
+<h2 class="text-4xl md:text-6xl font-black leading-none">Hello, I'm <span class="text-brand">Hazem.</span></h2>
+</div>
+<p class="text-lg md:text-xl font-medium leading-relaxed max-w-xl">I'm working on fun experiments, and I've learned Python. I have a dual boot of Windows 11 and Arch Linux, and I really like tech.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+<div class="neubrutalism-card bg-white p-3 font-bold text-sm shadow-brutal-sm">Stitch With Google</div>
+<div class="neubrutalism-card bg-white p-3 font-bold text-sm shadow-brutal-sm">HTML</div>
+<a href="https://github.com/hazemtech6-pixel" target="_blank" class="neubrutalism-card bg-white p-3 font-bold text-sm shadow-brutal-sm">Github Pages</a>
+</div>
+</div>
+</section>
+<!-- END: ProfileHero -->
+<!-- BEGIN: ProjectsSection -->
+<section class="space-y-10" data-purpose="project-gallery" id="projects">
+<div class="flex items-center gap-4">
+<h3 class="text-3xl font-black uppercase tracking-tighter">Featured Projects</h3>
+<div class="h-1 flex-grow bg-black"></div>
+</div>
+<div class="grid grid-cols-1 gap-8 max-w-xl mx-auto">
+<!-- Project Card: FlexiOS Core -->
+<article class="neubrutalism-card bg-white flex flex-col shadow-brutal rounded-lg overflow-hidden h-full">
+<div class="h-48 bg-brand flex items-center justify-center border-b-4 border-black p-6">
+<h4 class="text-white text-4xl font-black italic">FlexiOS</h4>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<h5 class="text-2xl font-extrabold mb-2">FlexiOS</h5>
+<p class="text-gray-700 font-medium mb-6 flex-grow">A fun experiment of a browser of an operating system in your browser.</p>
+<a class="neubrutalism-button bg-brand text-white w-full py-3 text-center font-bold uppercase tracking-widest text-sm" href="https://hazemtech6-pixel.github.io/flexios" target="_blank">
+              View Project
+            </a>
+</div>
+</article>
+<!-- Placeholder Project Card 1 -->
+
+</div>
+</section>
+<!-- END: ProjectsSection -->
+<!-- BEGIN: AboutSection -->
+<section class="neubrutalism-card bg-[#e0e0e0] p-8 md:p-12 shadow-brutal rounded-lg" data-purpose="bio-details">
+<h3 class="text-3xl font-black mb-6">About My Workflow</h3>
+<div class="grid md:grid-cols-2 gap-8 font-medium text-lg leading-relaxed">
+<p class="">
+          I believe that code should be as expressive as the design it supports. My approach combines the structural integrity of a back-end engineer with the creative flair of a designer.
+        </p>
+<p class="">Right now I am currently working on the fun experiment FlexiOS, which is just a fun experiment, and it uses Neubrutalist design principles&nbsp;</p>
+</div>
+</section>
+<!-- END: AboutSection -->
+</main>
+<!-- BEGIN: MainFooter -->
+<footer class="w-full mt-auto border-t-4 border-black bg-white py-12 px-6" data-purpose="site-footer">
+<div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 justify-center">
+<p class="text-xl font-black uppercase tracking-tighter text-center">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Hazem's Portfolio</p>
+
+
+</div>
+</footer>
+<!-- END: MainFooter -->
+
+
+</body></html>
