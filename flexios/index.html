@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-
-<html class="h-full" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<!DOCTYPE html><html class="h-full" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1.0" name="viewport">
 <title>FlexiOS v1.0 | The Future of Expressive Computing</title>
 <!-- Load Tailwind CSS v3 with plugins -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <!-- Load Three.js for 3D logo -->
 <script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
 <!-- Google Fonts: Lexend & Be Vietnam Pro -->
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -185,7 +183,9 @@
         }
         
         .bg-mountain {
-            background: linear-gradient(180deg, #4cd6ff 0%, #4cd6ff 50%, #676000 50%, #676000 100%);
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJZCoLfcJzOkwHR48FgLVtghtpQFxlafRL-9yKmxVEFMPXjcGcqdCi11eO1r87bFjLjagauM4wNpOdujhiAqqrukklKZBLR1fEgq-t_C2gEjOtSJu1ItIM9Wyx1qktB87AeWjf-tVcBEyt-HNBzzfK2eTxt4tJ0mum7vdiDS_hAVpDslXMbm7nm7spjWT9rsxiVCpw1_EozI5-KExhNmw6afD3CJAS9iJ9bZEaOTiDvhbQWXDsbKvembirSci9-I2LcTZ-K8_vO2c');
+            background-size: cover;
+            background-position: center;
         }
         .bg-mesh {
             background-color: #f6e600;
@@ -236,166 +236,14 @@
         .window-content {
             user-select: text;
         }
-
-        /* Floating Download Button */
-        .download-fab {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 1001;
-        }
     </style>
 </head>
 <body class="h-full overflow-hidden bg-background font-lexend">
-<!-- Global Download Button -->
-<!-- STITCH_THREEJS_START:ANIMATION_74 class="download-fab neubrutal-btn bg-flexiYellow text-black px-4 py-2 font-black shadow-neubrutal hover:shadow-neubrutal-lg flex items-center gap-2 text-sm md:text-base" -->
-<div class="download-fab neubrutal-btn bg-flexiYellow text-black px-4 py-2 font-black shadow-neubrutal hover:shadow-neubrutal-lg flex items-center gap-2 text-sm md:text-base" style="display:block;">
-<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
-<div id="threejs-container-ANIMATION_74" style="width:100%;height:100%"></div>
-<script>
-(function() {
-  const container = document.getElementById('threejs-container-ANIMATION_74');
-  const devicePixelRatio = window.devicePixelRatio || 1;
-  // FlexiOS v1.0 Core Engine
-// Window Management & UI Logic
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('FlexiOS v1.0 Initialized');
-    initWindowManagement();
-    initTerminal();
-    initCustomization();
-});
-
-function initWindowManagement() {
-    const windows = document.querySelectorAll('.window-frame');
-    const dockIcons = document.querySelectorAll('.dock-icon');
-
-    // Dragging Logic
-    windows.forEach(win => {
-        const header = win.querySelector('.window-header');
-        if (!header) return;
-
-        let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
-
-        header.addEventListener('mousedown', dragStart);
-
-        function dragStart(e) {
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
-            if (e.target === header || header.contains(e.target)) {
-                isDragging = true;
-                win.style.zIndex = getNextZIndex();
-            }
-        }
-
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('mouseup', dragEnd);
-
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
-                xOffset = currentX;
-                yOffset = currentY;
-                setTranslate(currentX, currentY, win);
-            }
-        }
-
-        function dragEnd() {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-        }
-    });
-
-    // Control Buttons
-    document.querySelectorAll('.btn-close').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const win = e.target.closest('.window-frame');
-            win.style.display = 'none';
-            updateDockIndicator(win.id, false);
-        });
-    });
-
-    document.querySelectorAll('.btn-minimize').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const win = e.target.closest('.window-frame');
-            win.classList.add('minimized');
-            updateDockIndicator(win.id, true);
-        });
-    });
-}
-
-function initTerminal() {
-    const termInput = document.querySelector('.terminal-input');
-    const termOutput = document.querySelector('.terminal-output');
-
-    if (termInput) {
-        termInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = termInput.value;
-                termOutput.innerHTML += `<div>root@flexios:~ $ ${cmd}</div>`;
-                processCommand(cmd);
-                termInput.value = '';
-                termOutput.scrollTop = termOutput.scrollHeight;
-            }
-        });
-    }
-}
-
-function processCommand(cmd) {
-    // Basic command processing
-    const output = document.querySelector('.terminal-output');
-    if (cmd === 'help') {
-        output.innerHTML += '<div>Available commands: help, clear, version, whoami</div>';
-    } else if (cmd === 'version') {
-        output.innerHTML += '<div>FlexiOS v1.0.4 (Stable)</div>';
-    }
-}
-
-function initCustomization() {
-    const wallpaperPresets = document.querySelectorAll('.wallpaper-preset');
-    const desktop = document.querySelector('.desktop-environment');
-
-    wallpaperPresets.forEach(preset => {
-        preset.addEventListener('click', () => {
-            const bg = preset.dataset.wallpaper;
-            desktop.style.backgroundImage = `url(${bg})`;
-        });
-    });
-}
-
-let zIndexCounter = 100;
-function getNextZIndex() {
-    return ++zIndexCounter;
-}
-
-function updateDockIndicator(winId, active) {
-    const indicator = document.querySelector(`[data-win-id="${winId}"] .indicator`);
-    if (indicator) {
-        indicator.style.opacity = active ? '1' : '0';
-    }
-}
-})();
-</script>
-</div>
-<!-- STITCH_THREEJS_END:ANIMATION_74 -->
 <!-- 1. Landing Page View -->
 <main class="view min-h-screen flex flex-col" id="view-landing">
 <header class="bg-flexiBlack text-white p-4 border-b-4 border-flexiBlack flex justify-between items-center z-50">
 <div class="text-2xl font-extrabold text-flexiYellow">FlexiOS v1.0</div>
-<nav class="flex gap-8 font-bold items-center pr-48 md:pr-64"> <!-- Added padding for download button room -->
+<nav class="flex gap-8 font-bold items-center">
 <a class="border-b-2 border-flexiYellow text-flexiYellow" href="#">Home</a>
 <a class="hover:text-flexiYellow" href="#">Docs</a>
 <a class="hover:text-flexiYellow" href="#">Github</a>
@@ -423,7 +271,7 @@ function updateDockIndicator(winId, active) {
 <div class="w-3 h-3 rounded-full bg-green-500"></div>
 <div class="text-[10px] text-zinc-500 flex-grow text-center uppercase tracking-tighter font-bold">SYSTEM_PREVIEW.EXE</div>
 </div>
-<img alt="FlexiOS Desktop Preview" class="w-full opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7dtb0CUUVF_-zBMKiXVoIcEKxc-mV9DntvI4ex4UoTeKlG_39cxtx2qVpmyB7KEyyEkk77bAHUOo5NutDzXzBuYgSB2Eqqz5WtmYC8OZ67cz7HyqdDk1lCzY55PiDcwhsG0IS2MlHRydFuVcZYav4HNwnIWIoFVYpKreMjp65Di5sfcNpnEHpt9jCiDN83Ov7JCfxeQuzsmRuAFR4a9dXJfZhKub7LOFyF88guJcNJlAIkvWtpgN2aC0wcFMTDh5DGxNjkColGx0"/>
+<img alt="FlexiOS Desktop Preview" class="w-full opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7dtb0CUUVF_-zBMKiXVoIcEKxc-mV9DntvI4ex4UoTeKlG_39cxtx2qVpmyB7KEyyEkk77bAHUOo5NutDzXzBuYgSB2Eqqz5WtmYC8OZ67cz7HyqdDk1lCzY55PiDcwhsG0IS2MlHRydFuVcZYav4HNwnIWIoFVYpKreMjp65Di5sfcNpnEHpt9jCiDN83Ov7JCfxeQuzsmRuAFR4a9dXJfZhKub7LOFyF88guJcNJlAIkvWtpgN2aC0wcFMTDh5DGxNjkColGx0">
 </div>
 <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-flexiBlue neubrutal-border shadow-neubrutal"></div>
 <div class="absolute -top-12 -right-12 w-32 h-32 bg-flexiYellow rounded-full neubrutal-border shadow-neubrutal"></div>
@@ -469,7 +317,7 @@ function updateDockIndicator(winId, active) {
 </div>
 <!-- 3. Desktop View -->
 <div class="view hidden fixed inset-0 z-30 overflow-hidden" id="view-desktop">
-<div class="absolute inset-0 z-[-1] bg-none transition-all duration-500" id="desktop-bg"></div>
+<div class="absolute inset-0 z-[-1] bg-mountain transition-all duration-500" id="desktop-bg"></div>
 <!-- Top Bar -->
 <header class="bg-tertiary text-on-tertiary flex justify-between items-center w-full px-10 py-2 h-16 z-[500] fixed top-0 border-b-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
 <div class="flex items-center gap-6">
@@ -480,10 +328,10 @@ function updateDockIndicator(winId, active) {
 <button class="text-on-tertiary opacity-80 hover:opacity-100 transition-all text-sm font-bold" onclick="toggleApp('hub-window')">Hub</button>
 </nav>
 </div>
-<div class="flex items-center gap-4 pr-48 md:pr-64">
+<div class="flex items-center gap-4">
 <div class="bg-white px-4 py-1.5 rounded-full border-[3px] border-black flex items-center gap-2 text-on-surface shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
 <span class="material-symbols-outlined text-[18px]">search</span>
-<input class="bg-transparent border-none outline-none focus:ring-0 text-sm p-0 w-32 placeholder:text-zinc-400" placeholder="Search..." type="text"/>
+<input class="bg-transparent border-none outline-none focus:ring-0 text-sm p-0 w-32 placeholder:text-zinc-400" placeholder="Search..." type="text">
 </div>
 <div class="flex gap-2">
 <button class="w-10 h-10 flex items-center justify-center bg-secondary-fixed text-black border-[3px] border-black rounded-full shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:scale-110 transition-all">
@@ -550,7 +398,7 @@ function updateDockIndicator(winId, active) {
 </div>
 <!-- Terminal -->
 <div class="app-window absolute top-[150px] right-20 w-[600px] h-[450px] bg-[#1b1b1b] border-[4px] border-black rounded-xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden z-[110] flex flex-col" id="terminal-window">
-<input autocomplete="off" class="absolute opacity-0 pointer-events-none" id="real-terminal-input" type="text"/>
+<input autocomplete="off" class="absolute opacity-0 pointer-events-none" id="real-terminal-input" type="text">
 <div class="window-header bg-primary flex items-center justify-between px-4 py-2 border-b-[3px] border-black">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-white text-[18px]">terminal</span>
@@ -567,7 +415,7 @@ function updateDockIndicator(winId, active) {
 <p>[ OK ] Loading Kernels: flex-kernel-v5.0.1</p>
 <p>[ OK ] Mounting FileSystems: /home/flexiuser/workspace</p>
 <p class="text-[#00ff41]">Update Complete! Welcome to the Grid.</p>
-<br/>
+<br>
 <div id="terminal-history"></div>
 <div class="flex flex-wrap gap-x-2 items-center" id="prompt-line">
 <span class="text-[#00ff41] font-bold">root@flexios:</span>
@@ -645,7 +493,7 @@ function updateDockIndicator(winId, active) {
 <button class="w-full neubrutal-btn bg-flexiPurple text-white py-2 font-bold shadow-neubrutal mb-6" onclick="applyWallpaper()">Apply to System</button>
 <div class="pt-4 border-t-2 border-black/10">
 <label class="block text-xs font-bold mb-2">Interface Roundness</label>
-<input class="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary" max="24" min="0" oninput="document.querySelectorAll('.app-window').forEach(w =&gt; w.style.borderRadius = this.value + 'px')" type="range" value="12"/>
+<input class="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-primary" max="24" min="0" oninput="document.querySelectorAll('.app-window').forEach(w =&gt; w.style.borderRadius = this.value + 'px')" type="range" value="12">
 </div>
 </div>
 </div>
@@ -674,153 +522,9 @@ function updateDockIndicator(winId, active) {
 </button>
 </nav>
 </div>
-<!-- Load Core Engine Logic -->
-<!-- STITCH_THREEJS_START:ANIMATION_74 class="" -->
-<div class="" style="display:block;width:100%;height:100%;min-height:200px;">
-<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
-<div id="threejs-container-ANIMATION_74" style="width:100%;height:100%"></div>
-<script>
-(function() {
-  const container = document.getElementById('threejs-container-ANIMATION_74');
-  const devicePixelRatio = window.devicePixelRatio || 1;
-  // FlexiOS v1.0 Core Engine
-// Window Management & UI Logic
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('FlexiOS v1.0 Initialized');
-    initWindowManagement();
-    initTerminal();
-    initCustomization();
-});
-
-function initWindowManagement() {
-    const windows = document.querySelectorAll('.window-frame');
-    const dockIcons = document.querySelectorAll('.dock-icon');
-
-    // Dragging Logic
-    windows.forEach(win => {
-        const header = win.querySelector('.window-header');
-        if (!header) return;
-
-        let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
-
-        header.addEventListener('mousedown', dragStart);
-
-        function dragStart(e) {
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
-            if (e.target === header || header.contains(e.target)) {
-                isDragging = true;
-                win.style.zIndex = getNextZIndex();
-            }
-        }
-
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('mouseup', dragEnd);
-
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
-                xOffset = currentX;
-                yOffset = currentY;
-                setTranslate(currentX, currentY, win);
-            }
-        }
-
-        function dragEnd() {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-        }
-    });
-
-    // Control Buttons
-    document.querySelectorAll('.btn-close').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const win = e.target.closest('.window-frame');
-            win.style.display = 'none';
-            updateDockIndicator(win.id, false);
-        });
-    });
-
-    document.querySelectorAll('.btn-minimize').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const win = e.target.closest('.window-frame');
-            win.classList.add('minimized');
-            updateDockIndicator(win.id, true);
-        });
-    });
-}
-
-function initTerminal() {
-    const termInput = document.querySelector('.terminal-input');
-    const termOutput = document.querySelector('.terminal-output');
-
-    if (termInput) {
-        termInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = termInput.value;
-                termOutput.innerHTML += `<div>root@flexios:~ $ ${cmd}</div>`;
-                processCommand(cmd);
-                termInput.value = '';
-                termOutput.scrollTop = termOutput.scrollHeight;
-            }
-        });
-    }
-}
-
-function processCommand(cmd) {
-    // Basic command processing
-    const output = document.querySelector('.terminal-output');
-    if (cmd === 'help') {
-        output.innerHTML += '<div>Available commands: help, clear, version, whoami</div>';
-    } else if (cmd === 'version') {
-        output.innerHTML += '<div>FlexiOS v1.0.4 (Stable)</div>';
-    }
-}
-
-function initCustomization() {
-    const wallpaperPresets = document.querySelectorAll('.wallpaper-preset');
-    const desktop = document.querySelector('.desktop-environment');
-
-    wallpaperPresets.forEach(preset => {
-        preset.addEventListener('click', () => {
-            const bg = preset.dataset.wallpaper;
-            desktop.style.backgroundImage = `url(${bg})`;
-        });
-    });
-}
-
-let zIndexCounter = 100;
-function getNextZIndex() {
-    return ++zIndexCounter;
-}
-
-function updateDockIndicator(winId, active) {
-    const indicator = document.querySelector(`[data-win-id="${winId}"] .indicator`);
-    if (indicator) {
-        indicator.style.opacity = active ? '1' : '0';
-    }
-}
-})();
-</script>
-</div>
-<!-- STITCH_THREEJS_END:ANIMATION_74 -->
 <script>
         let currentView = 'landing';
-        let pendingWallpaper = 'none';
+        let pendingWallpaper = 'mountain';
 
         function selectWallpaper(wp) {
             pendingWallpaper = wp;
@@ -1099,7 +803,7 @@ function updateDockIndicator(winId, active) {
                 
                 switch(cmd) {
                     case 'help': response.innerHTML = "Available: help, ls, clear, status, date, neofetch, exit"; break;
-                    case 'ls': response.innerHTML = "apps/ documents/ config.sys boot.log script.js"; break;
+                    case 'ls': response.innerHTML = "apps/ documents/ config.sys boot.log"; break;
                     case 'clear': terminalHistory.innerHTML = ''; response.innerHTML = ''; break;
                     case 'status': response.innerHTML = "Kernel: 5.0.1 | CPU: 12% | RAM: 2.4GB/8GB | Status: OPTIMAL"; break;
                     case 'date': response.innerHTML = new Date().toLocaleString(); break;
